@@ -11,6 +11,9 @@ const ViewAllMembers = ({ route, navigation }) => {
   const user = auth.currentUser;
   const [com_member_rel, setCom_member_rel] = useState([]);
   let getMemberName = "";
+  const changeMonthVal=[];
+
+ 
 
   const {
     control,
@@ -21,7 +24,7 @@ const ViewAllMembers = ({ route, navigation }) => {
   const [page, setPage] = useState(0);
   const [AllMembers, setAllMembers] = React.useState([]);
   const [itemsPerPage, setItemsPerPage] = React.useState(optionsPerPage[0]);
-
+  
   const abc = [];
   console.log("the nav", route);
   useEffect(() => {
@@ -62,17 +65,32 @@ const ViewAllMembers = ({ route, navigation }) => {
   const getMemberNameById = (uid) => {
 
     console.log("UID in detail", uid, AllMembers);
-  
-    var member = AllMembers.find((x) => x.uid == uid);
-   console.log("member", member)
+ 
+  //    AllMembers.map((x) => (x.uid == uid
+  //     member = x.memberName
+  //  console.log("member", member)))
   //  member = JSON.parse ( member )
 
 
     // return member.memberName;
   }
+
+  const onSubmitCheckbox=()=>{
+    const refCheckbox = db.collection("com_member_rel");
+
+    const refCheckboxCondition = refCheckbox.where(
+      "com_id",
+      "==",
+      comId,
+      "&&",
+      "member_id","==",
+    );
+    
+  }
   return (
     <>
       <View>
+    
         <DataTable.Header>
           <DataTable.Title>Member Name</DataTable.Title>
           <DataTable.Title>Jan</DataTable.Title>
@@ -90,49 +108,52 @@ const ViewAllMembers = ({ route, navigation }) => {
         </DataTable.Header>
         {com_member_rel.map((x) => (
           <View key={x.id}>
-            <DataTable>
+            <DataTable onPress= {handleSubmit(onSubmitCheckbox)}>
               <DataTable.Row>
                 <DataTable.Cell>
                   {getMemberNameById(x.member_id)}
+             
                 </DataTable.Cell>
                 <DataTable.Cell boolean>
-                  <CheckBox value={x.Jan} onValueChange="" />
+                  <CheckBox value={x.Jan} id="1" onPress={()=>{changeMonthVal[0]!=x.Jan}} />
                 </DataTable.Cell>
                 <DataTable.Cell>
-                  <CheckBox value={x.Feb} onValueChange="" />
+                  <CheckBox value={x.Feb} id="2" onPress={()=>{changeMonthVal[1]!=x.Feb}}/>
                 </DataTable.Cell>
                 <DataTable.Cell>
-                  <CheckBox value={x.Mar} onValueChange="" />
+                  <CheckBox value={x.Mar} id="3" onPress={()=>{changeMonthVal[2]!=x.Mar}}/>
                 </DataTable.Cell>
                 <DataTable.Cell>
-                  <CheckBox value={x.Apr} onValueChange="" />
+                  <CheckBox value={x.Apr} id="4" onPress={()=>{changeMonthVal[3]!=x.Apr}}/>
                 </DataTable.Cell>
                 <DataTable.Cell>
-                  <CheckBox value={x.May} onValueChange="" />
+                  <CheckBox value={x.May} id="5" onPress={()=>{changeMonthVal[4]!=x.May}}/>
                 </DataTable.Cell>
                 <DataTable.Cell>
-                  <CheckBox value={x.Jun} onValueChange="" />
+                  <CheckBox value={x.Jun} id="6" onPress={()=>{changeMonthVal[5]!=x.Jun}}/>
                 </DataTable.Cell>
                 <DataTable.Cell>
-                  <CheckBox value={x.Jul} onValueChange="" />
+                  <CheckBox value={x.Jul} id="7" onPress={()=>{changeMonthVal[6]!=x.Jul}}/>
                 </DataTable.Cell>
                 <DataTable.Cell>
-                  <CheckBox value={x.Aug} onValueChange="" />
+                  <CheckBox value={x.Aug} id="8" onPress={()=>{changeMonthVal[7]!=x.Aug}}/>
                 </DataTable.Cell>
                 <DataTable.Cell>
-                  <CheckBox value={x.Sep} onValueChange="" />
+                  <CheckBox value={x.Sep} id="9" onPress={()=>{changeMonthVal[8]!=x.Sep}}/>
                 </DataTable.Cell>
                 <DataTable.Cell>
-                  <CheckBox value={x.Oct} onValueChange="" />
+                  <CheckBox value={x.Oct} id="10" onPress={()=>{changeMonthVal[9]!=x.Oct}}/>
                 </DataTable.Cell>
                 <DataTable.Cell>
-                  <CheckBox value={x.Nov} onValueChange="" />
+                  <CheckBox value={x.Nov} id="11" onPress={()=>{changeMonthVal[10]!=x.Nov}}/>
                 </DataTable.Cell>
                 <DataTable.Cell>
-                  <CheckBox value={x.Dec} onValueChange="" />
+                  <CheckBox value={x.Dec} id="12" onPress={()=>{changeMonthVal[11]!=x.Dec}}/>
                 </DataTable.Cell>
               </DataTable.Row>
+              
             </DataTable>
+       
           </View>
         ))}
         <DataTable.Pagination
@@ -146,6 +167,8 @@ const ViewAllMembers = ({ route, navigation }) => {
           showFastPagination
           optionsLabel={"Rows per page"}
         />
+         <Button> Save Changes</Button>
+         
       </View>
       <FAB
         style={styles.fab}
