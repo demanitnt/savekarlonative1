@@ -10,6 +10,7 @@ const fire = firebase.initializeApp({
     messagingSenderId: "41295383102",
     appId: "1:41295383102:web:bb05455e0a9fc847cf5f6f"
 });
+firebase.firestore().settings({ experimentalForceLongPolling: true }); //add this..
 export const auth = fire.auth();
 export const db = fire.firestore();
 export default {

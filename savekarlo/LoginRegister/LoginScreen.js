@@ -3,7 +3,10 @@ import { View, Text } from "react-native";
 import { useForm, Controller } from "react-hook-form";
 import { TextInput, Button } from "react-native-paper";
 import RegisterScreen from "./RegisterScreen";
-const LoginScreen = ({ navigation }) => {
+import {auth} from '../firebase'
+
+const LoginScreen = ({ navigation }) => { 
+  
   const {
     control,
     handleSubmit,
@@ -11,7 +14,7 @@ const LoginScreen = ({ navigation }) => {
   } = useForm();
   const onSubmit = (data) => {
     const { email, password } = data;
-    AuthenticatorAssertionResponse.signInWithEmailAndPassword(
+    auth.signInWithEmailAndPassword(
       email.trim().toLowerCase(),
       password
     );

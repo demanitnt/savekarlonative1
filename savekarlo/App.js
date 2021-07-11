@@ -11,6 +11,11 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { FontAwesome } from "@expo/vector-icons";
 import LogOutTab from "./LoginRegister/LogOutTab"
 import CommitteesTab from "./CommitteeMembers/CommitteesTab";
+import {decode, encode} from 'react-native-base64';
+
+if (!global.btoa) {  global.btoa = encode }
+
+if (!global.atob) { global.atob = decode } 
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();

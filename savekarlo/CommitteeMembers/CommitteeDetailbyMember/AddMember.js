@@ -71,17 +71,16 @@ const AddOneCommittee = ({ route, navigation }) => {
     <>
       <View>
         <Picker
-          style={styles.picker}
           selectedValue={MembersForPicker}
           onValueChange={onChangePicker}
         >
-          <Picker.Item value="Select Member"></Picker.Item>
-          {AllMembers &&
+          <Picker.Item key="0101" label="Select Member" value="Select Member"></Picker.Item>
+          {AllMembers != undefined && AllMembers &&
             AllMembers.map((x) => (
               <Picker.Item key={x.id} label={x.email} value={x.uid} />
             ))}
         </Picker>
-        <FAB style={styles.fab} icon="plus" onPress={handleSubmit(onSubmit)} />
+        <FAB icon="plus" onPress={handleSubmit(onSubmit)} />
       </View>
     </>
   );
