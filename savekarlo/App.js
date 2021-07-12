@@ -1,6 +1,6 @@
 import { StatusBar } from "expo-status-bar";
 import React, { useState, useEffect } from "react";
-import { StyleSheet, Text, View, SafeAreaView } from "react-native";
+import { StyleSheet, Text, View, LogBox, SafeAreaView } from "react-native";
 import { db } from "./firebase";
 import { auth } from "./firebase";
 import { NavigationContainer, DefaultTheme } from "@react-navigation/native";
@@ -21,6 +21,7 @@ const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
 export default function App() {
+  LogBox.ignoreLogs(['Setting a timer for a long period of time']);
   const [members, setMembers] = useState([]);
   const [signedIn, setSignedIn] = useState(false);
   auth.onAuthStateChanged((user) => {

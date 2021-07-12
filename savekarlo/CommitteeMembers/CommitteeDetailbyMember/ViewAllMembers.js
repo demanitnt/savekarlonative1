@@ -23,7 +23,18 @@ const ViewAllMembers = ({ route, navigation }) => {
   const [page, setPage] = useState(0);
   const [AllMembers, setAllMembers] = React.useState([]);
   const [itemsPerPage, setItemsPerPage] = React.useState(optionsPerPage[0]);
-  const [checked, setChecked] = React.useState(false);
+  const [checked1, setChecked1] = React.useState(false);
+  const [checked2, setChecked2] = React.useState(false);
+  const [checked3, setChecked3] = React.useState(false);
+  const [checked4, setChecked4] = React.useState(false);
+  const [checked5, setChecked5] = React.useState(false);
+  const [checked6, setChecked6] = React.useState(false);
+  const [checked7, setChecked7] = React.useState(false);
+  const [checked8, setChecked8] = React.useState(false);
+  const [checked9, setChecked9] = React.useState(false);
+  const [checked10, setChecked10] = React.useState(false);
+  const [checked11, setChecked11] = React.useState(false);
+  const [checked12, setChecked12] = React.useState(false);
 
   const abc = [];
   console.log("the nav", route);
@@ -61,19 +72,22 @@ const ViewAllMembers = ({ route, navigation }) => {
     console.log("UID in detail", uid, AllMembers);
   };
 
-  const updateCheckboxValue = (e, month, collectionId) => {
+  const updateCheckboxValue = (e, month, collectionId, member_id) => {
+    var valueToUpdate = getCheckBoxValue(month);
+    var monthSelect = getMonth(month);
+    console.log("collectionId:", e, month, collectionId, member_id);
     const refCheckbox = db.collection("com_member_rel").doc(collectionId);
+
     refCheckbox
       .get()
       .then((doc) => {
         if (doc.exists) {
+          var doc = doc.data();
+          doc[monthSelect] = e;
           refCheckbox.set(
-            {
-              Dec: !checked,
-            },
+            doc,
             { merge: true }
           );
-          
         } else {
           console.log("No such document!");
         }
@@ -81,6 +95,7 @@ const ViewAllMembers = ({ route, navigation }) => {
       .catch((error) => {
         console.log("Error getting document:", error);
       });
+    return false;
   };
 
   const onSubmitCheckbox = () => {
@@ -97,6 +112,36 @@ const ViewAllMembers = ({ route, navigation }) => {
     // );
   };
 
+  const getMonth = (monthNumber) => {
+    switch (monthNumber) {
+      case 1:
+        return "Jan";
+        break;
+      case 1:
+        return "Jan";
+        break;
+      case 2:
+        return "Feb";
+        break;
+      case 3:
+        return "Mar";
+        break;
+      case 4:
+        return "Apr";
+        break;
+      case 5:
+        return "May";
+        break;
+      case 6:
+        return "Jun";
+        break;
+        case 12:
+        return "Dec";
+        break;
+      default:
+        break;
+    }
+  };
   return (
     <>
       <View>
@@ -120,48 +165,175 @@ const ViewAllMembers = ({ route, navigation }) => {
             <DataTable.Row>
               <DataTable.Cell></DataTable.Cell>
               <DataTable.Cell boolean>
-                {/* <CheckBox style={styles.checkbox} value={x.Jan} id="1" onValueChange={()=>{changeMonthVal[0]!=x.Jan}} /> */}
-              </DataTable.Cell>
-              <DataTable.Cell>
-                {/* <CheckBox style={styles.checkbox} value={x.Feb} id="2" onPress={()=>{changeMonthVal[1]!=x.Feb}}/> */}
-              </DataTable.Cell>
-              <DataTable.Cell>
-                {/* <CheckBox style={styles.checkbox} value={x.Mar} id="3" onPress={()=>{changeMonthVal[2]!=x.Mar}}/> */}
-              </DataTable.Cell>
-              <DataTable.Cell>
-                {/* <CheckBox style={styles.checkbox} value={x.Apr} id="4" onPress={()=>{changeMonthVal[3]!=x.Apr}}/> */}
-              </DataTable.Cell>
-              <DataTable.Cell>
-                {/* <CheckBox style={styles.checkbox} value={x.May} id="5" onPress={()=>{changeMonthVal[4]!=x.May}}/> */}
-              </DataTable.Cell>
-              <DataTable.Cell>
-                {/* <CheckBox style={styles.checkbox} value={x.Jun} id="6" onPress={()=>{changeMonthVal[5]!=x.Jun}}/> */}
-              </DataTable.Cell>
-              <DataTable.Cell>
-                {/* <CheckBox style={styles.checkbox} value={x.Jul} id="7" onPress={()=>{changeMonthVal[6]!=x.Jul}}/> */}
-              </DataTable.Cell>
-              <DataTable.Cell>
-                {/* <CheckBox style={styles.checkbox} value={x.Aug} id="8" onPress={()=>{changeMonthVal[7]!=x.Aug}}/> */}
-              </DataTable.Cell>
-              <DataTable.Cell>
-                {/* <CheckBox style={styles.checkbox} value={x.Sep} id="9" onPress={()=>{changeMonthVal[8]!=x.Sep}}/> */}
-              </DataTable.Cell>
-              <DataTable.Cell>
-                {/* <CheckBox style={styles.checkbox} value={x.Oct} id="10" onPress={()=>{changeMonthVal[9]!=x.Oct}}/> */}
-              </DataTable.Cell>
-              <DataTable.Cell>
-                <CheckBox style={styles.checkbox} value={x.Nov} id="11" />
-              </DataTable.Cell>
-              <DataTable.Cell>
-                {/* <Text> <Checkbox style={styles.checkbox}  status={checked ? 'checked' : 'unchecked'}   id="12" onPress={()=>{ setChecked(!checked)}}/></Text> */}
                 <CheckBox
                   style={styles.checkbox}
-                  value={checked}
+                  value={checked1}
+                  id="1"
+                  onValueChange={(e) =>
+                    updateCheckboxValue(
+                      e,
+                      1,
+                      x.id,
+                      x.member_id,
+                      setChecked1(!checked1)
+                    )
+                  }
+                />
+              </DataTable.Cell>
+              <DataTable.Cell>
+                <CheckBox
+                  style={styles.checkbox}
+                  value={checked2}
+                  id="2"
+                  onValueChange={() =>
+                    updateCheckboxValue(
+                      setChecked2(!checked2),
+                      { month: 2 },
+                      x.id
+                    )
+                  }
+                />
+              </DataTable.Cell>
+              <DataTable.Cell>
+                <CheckBox
+                  style={styles.checkbox}
+                  value={checked3}
+                  id="3"
+                  onValueChange={() =>
+                    updateCheckboxValue(
+                      setChecked3(!checked3),
+                      { month: 3 },
+                      x.id
+                    )
+                  }
+                />
+              </DataTable.Cell>
+              <DataTable.Cell>
+                <CheckBox
+                  style={styles.checkbox}
+                  value={checked4}
+                  id="4"
+                  onValueChange={() =>
+                    updateCheckboxValue(
+                      setChecked4(!checked4),
+                      { month: 4 },
+                      x.id
+                    )
+                  }
+                />
+              </DataTable.Cell>
+              <DataTable.Cell>
+                <CheckBox
+                  style={styles.checkbox}
+                  value={checked5}
+                  id="5"
+                  onValueChange={() =>
+                    updateCheckboxValue(
+                      setChecked5(!checked5),
+                      { month: 5 },
+                      x.id
+                    )
+                  }
+                />
+              </DataTable.Cell>
+              <DataTable.Cell>
+                <CheckBox
+                  style={styles.checkbox}
+                  value={checked6}
+                  id="6"
+                  onValueChange={() =>
+                    updateCheckboxValue(
+                      setChecked6(!checked6),
+                      { month: 6 },
+                      x.id
+                    )
+                  }
+                />
+              </DataTable.Cell>
+              <DataTable.Cell>
+                <CheckBox
+                  style={styles.checkbox}
+                  value={checked7}
+                  id="7"
+                  onValueChange={() => {
+                    updateCheckboxValue(
+                      setChecked7(!checked7),
+                      { month: 7 },
+                      x.id
+                    );
+                  }}
+                />
+              </DataTable.Cell>
+              <DataTable.Cell>
+                <CheckBox
+                  style={styles.checkbox}
+                  value={checked8}
+                  id="8"
+                  onValueChange={() =>
+                    updateCheckboxValue(
+                      setChecked8(!checked8),
+                      { month: 8 },
+                      x.id
+                    )
+                  }
+                />
+              </DataTable.Cell>
+              <DataTable.Cell>
+                <CheckBox
+                  style={styles.checkbox}
+                  value={checked9}
+                  id="9"
+                  onValueChange={() =>
+                    updateCheckboxValue(
+                      setChecked9(!checked9),
+                      { month: 9 },
+                      x.id
+                    )
+                  }
+                />
+              </DataTable.Cell>
+              <DataTable.Cell>
+                <CheckBox
+                  style={styles.checkbox}
+                  value={checked10}
+                  id="10"
+                  onValueChange={() =>
+                    updateCheckboxValue(
+                      setChecked10(!checked10),
+                      { month: 10 },
+                      x.id
+                    )
+                  }
+                />
+              </DataTable.Cell>
+              <DataTable.Cell>
+                <CheckBox
+                  style={styles.checkbox}
+                  value={checked11}
+                  id="11"
+                  onValueChange={() =>
+                    updateCheckboxValue(
+                      setChecked11(!checked11),
+                      { month: 11 },
+                      x.id
+                    )
+                  }
+                />
+              </DataTable.Cell>
+              <DataTable.Cell>
+                <CheckBox
+                  style={styles.checkbox}
+                  value={checked1}
                   id="12"
-                  onValueChange={()=>updateCheckboxValue(setChecked(!checked),
-                    { month: 12 },
-                    x.id
-                  )}
+                  onValueChange={(e) =>
+                    updateCheckboxValue(
+                      e,
+                      12,
+                      x.id,
+                      x.member_id,
+                      setChecked1(!checked1)
+                    )
+                  }
                 />
                 {/* <CheckBox style={styles.checkbox} data-userId={x.id} value={checked} checked={checked}   id="12" onValueChange={setChecked} /> */}
 
