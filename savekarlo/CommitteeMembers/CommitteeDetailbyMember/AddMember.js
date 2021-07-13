@@ -46,9 +46,9 @@ const AddOneCommittee = ({ route, navigation }) => {
     var junctionRel = {
       com_id: comId,
       member_id: member.uid,
-      Jan: true,
-      Feb: true,
-      Mar: true,
+      Jan: false,
+      Feb: false,
+      Mar: false,
       Apr: false,
       May: false,
       Jun: false,

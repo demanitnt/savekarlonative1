@@ -1,5 +1,5 @@
-import React, { useRef, useState, useEffect } from "react";
-import { View, Text, StyleSheet, CheckBox } from "react-native";
+import React, { useRef, useState, useEffect, StrictMode } from "react";
+import { View, Text, StyleSheet,ActivityIndicator, CheckBox } from "react-native";
 import { useForm, Controller } from "react-hook-form";
 import { TextInput, Button } from "react-native-paper";
 import { auth, db } from "../../firebase";
@@ -8,12 +8,13 @@ import { DataTable, FAB, List } from "react-native-paper";
 import { Checkbox } from "react-native-paper";
 
 const ViewAllMembers = ({ route, navigation }) => {
+
+  // *************************** Declaration*********************************
   const optionsPerPage = [2, 3, 4];
   const user = auth.currentUser;
   const [com_member_rel, setCom_member_rel] = useState([]);
   let getMemberName = "";
-  const changeMonthVal = [];
-
+  const updatedMonthValues = [false,false,false,false,false,false,false,false,false,false,false,false];
   const {
     control,
     handleSubmit,
@@ -35,14 +36,23 @@ const ViewAllMembers = ({ route, navigation }) => {
   const [checked10, setChecked10] = React.useState(false);
   const [checked11, setChecked11] = React.useState(false);
   const [checked12, setChecked12] = React.useState(false);
+var committeeMembers = [];
+  
 
-  const abc = [];
-  console.log("the nav", route);
+
+// ************************** Methods****************************************
+
+
+
+// useEffect
+
+
   useEffect(() => {
     const ref = db.collection("com_member_rel");
     const ref2 = db.collection("com_member_rel");
-
     const databymemberCommitteeid = ref.where("com_id", "==", comId);
+    const refPicker = db.collection("members");
+    
     databymemberCommitteeid.onSnapshot((query) => {
       const objs = [];
       query.forEach((doc) => {
@@ -53,8 +63,10 @@ const ViewAllMembers = ({ route, navigation }) => {
         });
       });
       setCom_member_rel(objs);
+     
     });
-    const refPicker = db.collection("members");
+
+
     refPicker.onSnapshot((query) => {
       const objs = [];
       query.forEach((doc) => {
@@ -63,19 +75,24 @@ const ViewAllMembers = ({ route, navigation }) => {
           ...doc.data(),
         });
       });
-      console.log("objs at add member", objs);
       setAllMembers(objs);
     });
   }, []);
 
-  const getMemberNameById = (uid) => {
-    console.log("UID in detail", uid, AllMembers);
-  };
+const updatedMonthWiseCheckbox=(e,month)=>
+{
+  console.log("Month value in updatedMonthwise", month)
+  updatedMonthValues.splice(month-1,0,e)
 
-  const updateCheckboxValue = (e, month, collectionId, member_id) => {
-    var valueToUpdate = getCheckBoxValue(month);
+console.log("The undatedMonthvalues:: ", updatedMonthValues[11])
+}
+
+// updateCheckboxValue
+
+ const updateCheckboxValue = (e, month, collectionId) => {
+    //  var valueToUpdate = updatedMonthWiseCheckbox(e,month)
     var monthSelect = getMonth(month);
-    console.log("collectionId:", e, month, collectionId, member_id);
+    console.log("collectionId:", e, month, collectionId);
     const refCheckbox = db.collection("com_member_rel").doc(collectionId);
 
     refCheckbox
@@ -98,6 +115,11 @@ const ViewAllMembers = ({ route, navigation }) => {
     return false;
   };
 
+
+
+
+  // onSubmitCheckbox
+
   const onSubmitCheckbox = () => {
     console.log("The save button: ", changeMonthVal);
 
@@ -111,6 +133,9 @@ const ViewAllMembers = ({ route, navigation }) => {
     //   "member_id","==",
     // );
   };
+
+
+  // getMonth
 
   const getMonth = (monthNumber) => {
     switch (monthNumber) {
@@ -135,6 +160,22 @@ const ViewAllMembers = ({ route, navigation }) => {
       case 6:
         return "Jun";
         break;
+        case 7:
+        return "Jul";
+        break;
+        case 8:
+        return "Aug";
+        break;
+        case 9:
+        return "Sep";
+        break;
+        case 10:
+        return "Oct";
+        break;
+        case 11:
+        return "Nov";
+        break;
+
         case 12:
         return "Dec";
         break;
@@ -142,9 +183,19 @@ const ViewAllMembers = ({ route, navigation }) => {
         break;
     }
   };
+  
+  
+//  return
+  
   return (
     <>
+    {console.log("Called", committeeMembers)}
       <View>
+      <ActivityIndicator />
+
+
+{/* table */}
+
         <DataTable.Header>
           <DataTable.Title>Member Name</DataTable.Title>
           <DataTable.Title>Jan</DataTable.Title>
@@ -167,15 +218,14 @@ const ViewAllMembers = ({ route, navigation }) => {
               <DataTable.Cell boolean>
                 <CheckBox
                   style={styles.checkbox}
-                  value={checked1}
+                  value={x['Jan']}
                   id="1"
                   onValueChange={(e) =>
                     updateCheckboxValue(
                       e,
                       1,
                       x.id,
-                      x.member_id,
-                      setChecked1(!checked1)
+                      
                     )
                   }
                 />
@@ -183,13 +233,15 @@ const ViewAllMembers = ({ route, navigation }) => {
               <DataTable.Cell>
                 <CheckBox
                   style={styles.checkbox}
-                  value={checked2}
+                  value={x['Feb']}
                   id="2"
-                  onValueChange={() =>
+                  onValueChange={(e) =>
                     updateCheckboxValue(
-                      setChecked2(!checked2),
-                      { month: 2 },
-                      x.id
+                      e,
+                      2,
+                      x.id,
+                      
+                      
                     )
                   }
                 />
@@ -197,13 +249,15 @@ const ViewAllMembers = ({ route, navigation }) => {
               <DataTable.Cell>
                 <CheckBox
                   style={styles.checkbox}
-                  value={checked3}
+                  value={x['Mar']}
                   id="3"
-                  onValueChange={() =>
+                  onValueChange={(e) =>
                     updateCheckboxValue(
-                      setChecked3(!checked3),
-                      { month: 3 },
-                      x.id
+                      e,
+                      3,
+                      x.id,
+                      
+                      
                     )
                   }
                 />
@@ -211,13 +265,15 @@ const ViewAllMembers = ({ route, navigation }) => {
               <DataTable.Cell>
                 <CheckBox
                   style={styles.checkbox}
-                  value={checked4}
+                  value={x['Apr']}
                   id="4"
-                  onValueChange={() =>
+                  onValueChange={(e) =>
                     updateCheckboxValue(
-                      setChecked4(!checked4),
-                      { month: 4 },
-                      x.id
+                      e,
+                      4,
+                      x.id,
+                      
+                      
                     )
                   }
                 />
@@ -225,13 +281,15 @@ const ViewAllMembers = ({ route, navigation }) => {
               <DataTable.Cell>
                 <CheckBox
                   style={styles.checkbox}
-                  value={checked5}
+                  value={x['May']}
                   id="5"
-                  onValueChange={() =>
+                  onValueChange={(e) =>
                     updateCheckboxValue(
-                      setChecked5(!checked5),
-                      { month: 5 },
-                      x.id
+                      e,
+                      5,
+                      x.id,
+                      
+                      
                     )
                   }
                 />
@@ -239,13 +297,15 @@ const ViewAllMembers = ({ route, navigation }) => {
               <DataTable.Cell>
                 <CheckBox
                   style={styles.checkbox}
-                  value={checked6}
+                  value={x['Jun']}
                   id="6"
-                  onValueChange={() =>
+                  onValueChange={(e) =>
                     updateCheckboxValue(
-                      setChecked6(!checked6),
-                      { month: 6 },
-                      x.id
+                      e,
+                      6,
+                      x.id,
+                      
+                      
                     )
                   }
                 />
@@ -253,27 +313,31 @@ const ViewAllMembers = ({ route, navigation }) => {
               <DataTable.Cell>
                 <CheckBox
                   style={styles.checkbox}
-                  value={checked7}
+                  value={x['Jul']}
                   id="7"
-                  onValueChange={() => {
+                  onValueChange={(e) =>
                     updateCheckboxValue(
-                      setChecked7(!checked7),
-                      { month: 7 },
-                      x.id
-                    );
-                  }}
+                      e,
+                      7,
+                      x.id,
+                      
+                      
+                    )
+                  }
                 />
               </DataTable.Cell>
               <DataTable.Cell>
                 <CheckBox
                   style={styles.checkbox}
-                  value={checked8}
+                  value={x['Aug']}
                   id="8"
-                  onValueChange={() =>
+                  onValueChange={(e) =>
                     updateCheckboxValue(
-                      setChecked8(!checked8),
-                      { month: 8 },
-                      x.id
+                      e,
+                      8,
+                      x.id,
+                      
+                      
                     )
                   }
                 />
@@ -281,13 +345,15 @@ const ViewAllMembers = ({ route, navigation }) => {
               <DataTable.Cell>
                 <CheckBox
                   style={styles.checkbox}
-                  value={checked9}
+                  value={x['Sep']}
                   id="9"
-                  onValueChange={() =>
+                  onValueChange={(e) =>
                     updateCheckboxValue(
-                      setChecked9(!checked9),
-                      { month: 9 },
-                      x.id
+                      e,
+                      9,
+                      x.id,
+                      
+                      
                     )
                   }
                 />
@@ -295,13 +361,15 @@ const ViewAllMembers = ({ route, navigation }) => {
               <DataTable.Cell>
                 <CheckBox
                   style={styles.checkbox}
-                  value={checked10}
+                  value={x['Oct']}
                   id="10"
-                  onValueChange={() =>
+                  onValueChange={(e) =>
                     updateCheckboxValue(
-                      setChecked10(!checked10),
-                      { month: 10 },
-                      x.id
+                      e,
+                      10,
+                      x.id,
+                      
+                      
                     )
                   }
                 />
@@ -309,13 +377,15 @@ const ViewAllMembers = ({ route, navigation }) => {
               <DataTable.Cell>
                 <CheckBox
                   style={styles.checkbox}
-                  value={checked11}
+                  value={x['Nov']}
                   id="11"
-                  onValueChange={() =>
+                  onValueChange={(e) =>
                     updateCheckboxValue(
-                      setChecked11(!checked11),
-                      { month: 11 },
-                      x.id
+                      e,
+                      11,
+                      x.id,
+                      
+                      
                     )
                   }
                 />
@@ -323,30 +393,28 @@ const ViewAllMembers = ({ route, navigation }) => {
               <DataTable.Cell>
                 <CheckBox
                   style={styles.checkbox}
-                  value={checked1}
+                  value={x['Dec']}
                   id="12"
                   onValueChange={(e) =>
                     updateCheckboxValue(
                       e,
                       12,
                       x.id,
-                      x.member_id,
-                      setChecked1(!checked1)
+                      
+                      
                     )
                   }
                 />
-                {/* <CheckBox style={styles.checkbox} data-userId={x.id} value={checked} checked={checked}   id="12" onValueChange={setChecked} /> */}
-
-                {/* <Text> <Checkbox
-      status={checked ? 'checked' : 'unchecked'}
-      onPress={() => {
-        setChecked(!checked);
-      }}
-    /></Text> */}
               </DataTable.Cell>
             </DataTable.Row>
+            <Button onPress={() => handleSubmit(onSubmitCheckbox())}>
+          {" "}
+          Save Changes
+        </Button>
           </DataTable>
+          
         ))}
+        
         <DataTable.Pagination
           page={page}
           numberOfPages={3}
@@ -358,14 +426,16 @@ const ViewAllMembers = ({ route, navigation }) => {
           showFastPagination
           optionsLabel={"Rows per page"}
         />
-        <Button onPress={() => handleSubmit(onSubmitCheckbox())}>
-          {" "}
-          Save Changes
-        </Button>
+    
+    
+       
       </View>
+      
+    {/* FAB   */}
+      
       <FAB
         style={styles.fab}
-        icon="plus"
+        label="Add Member"
         onPress={() => navigation.navigate("addmember", { comId: comId })}
       />
     </>

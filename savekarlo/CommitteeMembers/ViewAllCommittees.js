@@ -73,7 +73,7 @@ const ViewAllCommittees = ({ navigation }) => {
       </View>
       <FAB
         style={styles.fab}
-        icon="plus"
+        label="Add Committee"
         onPress={() => navigation.navigate("addOnecommittee")}
       />
     </>
