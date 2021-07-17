@@ -28,7 +28,7 @@ const AddOneCommittee = ({ navigation }) => {
       const ref = db.collection("committees");
 
       var addedCommitteeId = await ref.add(committee);
-
+console.log("committe doc id", addedCommitteeId)
       navigation.goBack();
     } catch (err) {
       console.log(err);

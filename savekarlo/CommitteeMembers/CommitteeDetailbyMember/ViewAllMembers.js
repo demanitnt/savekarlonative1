@@ -1,5 +1,11 @@
 import React, { useRef, useState, useEffect, StrictMode } from "react";
-import { View, Text, StyleSheet,ActivityIndicator, CheckBox } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  ActivityIndicator,
+  CheckBox,
+} from "react-native";
 import { useForm, Controller } from "react-hook-form";
 import { TextInput, Button } from "react-native-paper";
 import { auth, db } from "../../firebase";
@@ -8,13 +14,10 @@ import { DataTable, FAB, List } from "react-native-paper";
 import { Checkbox } from "react-native-paper";
 
 const ViewAllMembers = ({ route, navigation }) => {
-
   // *************************** Declaration*********************************
   const optionsPerPage = [2, 3, 4];
   const user = auth.currentUser;
   const [com_member_rel, setCom_member_rel] = useState([]);
-  let getMemberName = "";
-  const updatedMonthValues = [false,false,false,false,false,false,false,false,false,false,false,false];
   const {
     control,
     handleSubmit,
@@ -24,35 +27,19 @@ const ViewAllMembers = ({ route, navigation }) => {
   const [page, setPage] = useState(0);
   const [AllMembers, setAllMembers] = React.useState([]);
   const [itemsPerPage, setItemsPerPage] = React.useState(optionsPerPage[0]);
-  const [checked1, setChecked1] = React.useState(false);
-  const [checked2, setChecked2] = React.useState(false);
-  const [checked3, setChecked3] = React.useState(false);
-  const [checked4, setChecked4] = React.useState(false);
-  const [checked5, setChecked5] = React.useState(false);
-  const [checked6, setChecked6] = React.useState(false);
-  const [checked7, setChecked7] = React.useState(false);
-  const [checked8, setChecked8] = React.useState(false);
-  const [checked9, setChecked9] = React.useState(false);
-  const [checked10, setChecked10] = React.useState(false);
-  const [checked11, setChecked11] = React.useState(false);
-  const [checked12, setChecked12] = React.useState(false);
-var committeeMembers = [];
-  
 
+  var committeeMembers = [];
 
-// ************************** Methods****************************************
+  // ************************** Methods****************************************
 
-
-
-// useEffect
-
+  // useEffect
 
   useEffect(() => {
     const ref = db.collection("com_member_rel");
     const ref2 = db.collection("com_member_rel");
     const databymemberCommitteeid = ref.where("com_id", "==", comId);
     const refPicker = db.collection("members");
-    
+
     databymemberCommitteeid.onSnapshot((query) => {
       const objs = [];
       query.forEach((doc) => {
@@ -63,9 +50,7 @@ var committeeMembers = [];
         });
       });
       setCom_member_rel(objs);
-     
     });
-
 
     refPicker.onSnapshot((query) => {
       const objs = [];
@@ -79,18 +64,9 @@ var committeeMembers = [];
     });
   }, []);
 
-const updatedMonthWiseCheckbox=(e,month)=>
-{
-  console.log("Month value in updatedMonthwise", month)
-  updatedMonthValues.splice(month-1,0,e)
+  // updateCheckboxValue
 
-console.log("The undatedMonthvalues:: ", updatedMonthValues[11])
-}
-
-// updateCheckboxValue
-
- const updateCheckboxValue = (e, month, collectionId) => {
-    //  var valueToUpdate = updatedMonthWiseCheckbox(e,month)
+  const updateCheckboxValue = (e, month, collectionId) => {
     var monthSelect = getMonth(month);
     console.log("collectionId:", e, month, collectionId);
     const refCheckbox = db.collection("com_member_rel").doc(collectionId);
@@ -101,10 +77,7 @@ console.log("The undatedMonthvalues:: ", updatedMonthValues[11])
         if (doc.exists) {
           var doc = doc.data();
           doc[monthSelect] = e;
-          refCheckbox.set(
-            doc,
-            { merge: true }
-          );
+          refCheckbox.set(doc, { merge: true });
         } else {
           console.log("No such document!");
         }
@@ -114,9 +87,6 @@ console.log("The undatedMonthvalues:: ", updatedMonthValues[11])
       });
     return false;
   };
-
-
-
 
   // onSubmitCheckbox
 
@@ -133,7 +103,6 @@ console.log("The undatedMonthvalues:: ", updatedMonthValues[11])
     //   "member_id","==",
     // );
   };
-
 
   // getMonth
 
@@ -160,41 +129,55 @@ console.log("The undatedMonthvalues:: ", updatedMonthValues[11])
       case 6:
         return "Jun";
         break;
-        case 7:
+      case 7:
         return "Jul";
         break;
-        case 8:
+      case 8:
         return "Aug";
         break;
-        case 9:
+      case 9:
         return "Sep";
         break;
-        case 10:
+      case 10:
         return "Oct";
         break;
-        case 11:
+      case 11:
         return "Nov";
         break;
 
-        case 12:
+      case 12:
         return "Dec";
         break;
       default:
         break;
     }
   };
-  
-  
-//  return
-  
+
+// getMemberName 
+
+  const getMemberName =   (memberid) => {
+
+  let memberNameReturned='';
+
+  AllMembers.map((x)=>
+  {
+  if(x['uid']===memberid)
+  memberNameReturned=x['memberName']
+   
+  }) 
+   
+     return memberNameReturned;
+  };
+
+  //  return
+
   return (
     <>
-    {console.log("Called", committeeMembers)}
+      
       <View>
-      <ActivityIndicator />
+      
 
-
-{/* table */}
+        {/* table */}
 
         <DataTable.Header>
           <DataTable.Title>Member Name</DataTable.Title>
@@ -214,207 +197,107 @@ console.log("The undatedMonthvalues:: ", updatedMonthValues[11])
         {com_member_rel.map((x) => (
           <DataTable key={x.id}>
             <DataTable.Row>
-              <DataTable.Cell></DataTable.Cell>
+              <DataTable.Cell>{getMemberName(x["member_id"])}</DataTable.Cell>
               <DataTable.Cell boolean>
                 <CheckBox
                   style={styles.checkbox}
-                  value={x['Jan']}
+                  value={x["Jan"]}
                   id="1"
-                  onValueChange={(e) =>
-                    updateCheckboxValue(
-                      e,
-                      1,
-                      x.id,
-                      
-                    )
-                  }
+                  onValueChange={(e) => updateCheckboxValue(e, 1, x.id)}
                 />
               </DataTable.Cell>
               <DataTable.Cell>
                 <CheckBox
                   style={styles.checkbox}
-                  value={x['Feb']}
+                  value={x["Feb"]}
                   id="2"
-                  onValueChange={(e) =>
-                    updateCheckboxValue(
-                      e,
-                      2,
-                      x.id,
-                      
-                      
-                    )
-                  }
+                  onValueChange={(e) => updateCheckboxValue(e, 2, x.id)}
                 />
               </DataTable.Cell>
               <DataTable.Cell>
                 <CheckBox
                   style={styles.checkbox}
-                  value={x['Mar']}
+                  value={x["Mar"]}
                   id="3"
-                  onValueChange={(e) =>
-                    updateCheckboxValue(
-                      e,
-                      3,
-                      x.id,
-                      
-                      
-                    )
-                  }
+                  onValueChange={(e) => updateCheckboxValue(e, 3, x.id)}
                 />
               </DataTable.Cell>
               <DataTable.Cell>
                 <CheckBox
                   style={styles.checkbox}
-                  value={x['Apr']}
+                  value={x["Apr"]}
                   id="4"
-                  onValueChange={(e) =>
-                    updateCheckboxValue(
-                      e,
-                      4,
-                      x.id,
-                      
-                      
-                    )
-                  }
+                  onValueChange={(e) => updateCheckboxValue(e, 4, x.id)}
                 />
               </DataTable.Cell>
               <DataTable.Cell>
                 <CheckBox
                   style={styles.checkbox}
-                  value={x['May']}
+                  value={x["May"]}
                   id="5"
-                  onValueChange={(e) =>
-                    updateCheckboxValue(
-                      e,
-                      5,
-                      x.id,
-                      
-                      
-                    )
-                  }
+                  onValueChange={(e) => updateCheckboxValue(e, 5, x.id)}
                 />
               </DataTable.Cell>
               <DataTable.Cell>
                 <CheckBox
                   style={styles.checkbox}
-                  value={x['Jun']}
+                  value={x["Jun"]}
                   id="6"
-                  onValueChange={(e) =>
-                    updateCheckboxValue(
-                      e,
-                      6,
-                      x.id,
-                      
-                      
-                    )
-                  }
+                  onValueChange={(e) => updateCheckboxValue(e, 6, x.id)}
                 />
               </DataTable.Cell>
               <DataTable.Cell>
                 <CheckBox
                   style={styles.checkbox}
-                  value={x['Jul']}
+                  value={x["Jul"]}
                   id="7"
-                  onValueChange={(e) =>
-                    updateCheckboxValue(
-                      e,
-                      7,
-                      x.id,
-                      
-                      
-                    )
-                  }
+                  onValueChange={(e) => updateCheckboxValue(e, 7, x.id)}
                 />
               </DataTable.Cell>
               <DataTable.Cell>
                 <CheckBox
                   style={styles.checkbox}
-                  value={x['Aug']}
+                  value={x["Aug"]}
                   id="8"
-                  onValueChange={(e) =>
-                    updateCheckboxValue(
-                      e,
-                      8,
-                      x.id,
-                      
-                      
-                    )
-                  }
+                  onValueChange={(e) => updateCheckboxValue(e, 8, x.id)}
                 />
               </DataTable.Cell>
               <DataTable.Cell>
                 <CheckBox
                   style={styles.checkbox}
-                  value={x['Sep']}
+                  value={x["Sep"]}
                   id="9"
-                  onValueChange={(e) =>
-                    updateCheckboxValue(
-                      e,
-                      9,
-                      x.id,
-                      
-                      
-                    )
-                  }
+                  onValueChange={(e) => updateCheckboxValue(e, 9, x.id)}
                 />
               </DataTable.Cell>
               <DataTable.Cell>
                 <CheckBox
                   style={styles.checkbox}
-                  value={x['Oct']}
+                  value={x["Oct"]}
                   id="10"
-                  onValueChange={(e) =>
-                    updateCheckboxValue(
-                      e,
-                      10,
-                      x.id,
-                      
-                      
-                    )
-                  }
+                  onValueChange={(e) => updateCheckboxValue(e, 10, x.id)}
                 />
               </DataTable.Cell>
               <DataTable.Cell>
                 <CheckBox
                   style={styles.checkbox}
-                  value={x['Nov']}
+                  value={x["Nov"]}
                   id="11"
-                  onValueChange={(e) =>
-                    updateCheckboxValue(
-                      e,
-                      11,
-                      x.id,
-                      
-                      
-                    )
-                  }
+                  onValueChange={(e) => updateCheckboxValue(e, 11, x.id)}
                 />
               </DataTable.Cell>
               <DataTable.Cell>
                 <CheckBox
                   style={styles.checkbox}
-                  value={x['Dec']}
+                  value={x["Dec"]}
                   id="12"
-                  onValueChange={(e) =>
-                    updateCheckboxValue(
-                      e,
-                      12,
-                      x.id,
-                      
-                      
-                    )
-                  }
+                  onValueChange={(e) => updateCheckboxValue(e, 12, x.id)}
                 />
               </DataTable.Cell>
             </DataTable.Row>
-            <Button onPress={() => handleSubmit(onSubmitCheckbox())}>
-          {" "}
-          Save Changes
-        </Button>
           </DataTable>
-          
         ))}
-        
+
         <DataTable.Pagination
           page={page}
           numberOfPages={3}
@@ -426,13 +309,10 @@ console.log("The undatedMonthvalues:: ", updatedMonthValues[11])
           showFastPagination
           optionsLabel={"Rows per page"}
         />
-    
-    
-       
       </View>
-      
-    {/* FAB   */}
-      
+
+      {/* FAB   */}
+
       <FAB
         style={styles.fab}
         label="Add Member"
