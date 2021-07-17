@@ -9,11 +9,9 @@ const ViewAllCommittees = ({ navigation }) => {
   var committeeId = "";
   const user = auth.currentUser;
   const [page, setPage] = useState(0);
-  const [itemsPperPage, setItemsPerPage] = React.useState(optionsPerPage[0]);
+  const [itemsPerPage, setItemsPerPage] = React.useState(optionsPerPage[0]);
   const [committees, setCommittees] = useState([]);
   const [allCommittees, setAllCommittees] = useState([]);
-
-  var getAllCommitteesOfCurrentUser = "";
 
   useEffect(() => {
     var ref = db.collection("committees");
@@ -32,26 +30,30 @@ const ViewAllCommittees = ({ navigation }) => {
         });
       });
       setCommittees(objs);
-    } )
-    committees.map(comittees=>{
-        var ref1=db.collection("committees").doc(comittees["com_id"]);
-  
-     
-    ref1.get().then(doc=>{
-      if (doc.exists) {
-        var doc = doc.data();
-        var committee=committees
-        committee.push(doc);
-        setAllCommittees(committee)
-        console.log("this is committee",committees)
-      } else {
-        console.log("No such document!");
-      }
-    }) 
-  });
-    
-    
-    
+    });
+
+    console.log("All committees", committees);
+    var objComm = [];
+    Promise.all(
+      committees.map((comittee) => {
+        var ref1 = db.collection("committees").doc(comittee["com_id"]);
+        return ref1.get().then((doc) => {
+          if (doc.exists) {
+            return {
+              id: doc.id,
+              ...doc.data(),
+            };
+          } else {
+            console.log("No such document!");
+          }
+        });
+      })
+    ).then((committeesAll) => {
+        setAllCommittees(committeesAll);
+      })
+      .catch((e) => {
+        console.log("Error in promise for", e);
+      });
   }, []);
 
   const handleSubmit = (x) => {
@@ -65,29 +67,30 @@ const ViewAllCommittees = ({ navigation }) => {
           <DataTable.Title>Committee Name</DataTable.Title>
           <DataTable.Title numeric>Committee Share</DataTable.Title>
         </DataTable.Header>
-        {allCommittees.map((x) => (
-          <View key={x.id}>
-            <DataTable>
-              {/* <List.Items onPress={()=> handleSubmit(x)}> */}
+        {allCommittees != undefined &&
+          allCommittees.map((x) => (
+            <View key={x.id}>
+              <DataTable>
+                {/* <List.Items onPress={()=> handleSubmit(x)}> */}
 
-              <DataTable.Row
-                onPress={() =>
-                  navigation.navigate("membermain", {
-                    screen: "viewallmembers",
-                    params: {
-                      comName: x.comName,
-                      comShare: x.comShare,
-                      comId: x.id,
-                    },
-                  })
-                }
-              >
-                <DataTable.Cell>{x.comName}</DataTable.Cell>
-                <DataTable.Cell numeric>{x.comShare}</DataTable.Cell>
-              </DataTable.Row>
-            </DataTable>
-          </View>
-        ))}
+                <DataTable.Row
+                  onPress={() =>
+                    navigation.navigate("membermain", {
+                      screen: "viewallmembers",
+                      params: {
+                        comName: x.comName,
+                        comShare: x.comShare,
+                        comId: x.id,
+                      },
+                    })
+                  }
+                >
+                  <DataTable.Cell>{x.comName}</DataTable.Cell>
+                  <DataTable.Cell numeric>{x.comShare}</DataTable.Cell>
+                </DataTable.Row>
+              </DataTable>
+            </View>
+          ))}
         <DataTable.Pagination
           page={page}
           numberOfPages={3}

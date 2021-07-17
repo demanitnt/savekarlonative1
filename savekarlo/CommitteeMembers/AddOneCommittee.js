@@ -25,10 +25,28 @@ const AddOneCommittee = ({ navigation }) => {
         createdAt: firebase.firestore.FieldValue.serverTimestamp(),
       };
 
-      const ref = db.collection("committees");
+      const ref = db.collection("committees").doc();
+      const refJunction = db.collection("com_member_rel")
 
-      var addedCommitteeId = await ref.add(committee);
-console.log("committe doc id", addedCommitteeId)
+      var addedCommitteeId = await ref.set(committee);
+
+      var junctionRel = {
+        com_id: ref.id,
+        member_id: user.uid,
+        Jan: false,
+        Feb: false,
+        Mar: false,
+        Apr: false,
+        May: false,
+        Jun: false,
+        Jul: false,
+        Aug: false,
+        Sep: false,
+        Oct: false,
+        Nov: false,
+        Dec: false,
+      };
+      await refJunction.add(junctionRel);
       navigation.goBack();
     } catch (err) {
       console.log(err);
