@@ -9,19 +9,24 @@ import LoginScreen from "./LoginRegister/LoginScreen";
 import RegisterScreen from "./LoginRegister/RegisterScreen";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { FontAwesome } from "@expo/vector-icons";
-import LogOutTab from "./LoginRegister/LogOutTab"
+import LogOutTab from "./LoginRegister/LogOutTab";
 import CommitteesTab from "./CommitteeMembers/CommitteesTab";
-import {decode, encode} from 'react-native-base64';
+import { decode, encode } from "react-native-base64";
+import { DarkTheme } from "react-native-paper";
 
-if (!global.btoa) {  global.btoa = encode }
+if (!global.btoa) {
+  global.btoa = encode;
+}
 
-if (!global.atob) { global.atob = decode } 
+if (!global.atob) {
+  global.atob = decode;
+}
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
 export default function App() {
-  LogBox.ignoreLogs(['Setting a timer for a long period of time']);
+  LogBox.ignoreLogs(["Setting a timer for a long period of time"]);
   const [members, setMembers] = useState([]);
   const [signedIn, setSignedIn] = useState(false);
   auth.onAuthStateChanged((user) => {
@@ -32,9 +37,21 @@ export default function App() {
     }
   });
 
-  const handlePress=()=>{
-    console.log("Clicked")
-  }
+  const MyTheme = {
+    dark: false,
+    colors: {
+      primary: "blue",
+      background: "orange",
+      card: "yellowblue",
+      text: "rgb(28, 28, 30)",
+      border: "black",
+      notification: "red",
+    },
+  };
+
+  const handlePress = () => {
+    console.log("Clicked");
+  };
 
   useEffect(() => {
     const ref = db.collection("savekarlo");
@@ -50,56 +67,46 @@ export default function App() {
     });
   }, []);
   return (
-    <NavigationContainer theme={DefaultTheme}>
+    <NavigationContainer theme={MyTheme}>
       {signedIn ? (
-        <SafeAreaView style={{flex: 1, backgroundColor: '#29434e'}}>
-        <Tab.Navigator
-          screenOptions={({ route }) => ({
-          tabBarIcon: ({ color, size }) => {
-            if (route.name === 'committees') {
-              return (
-                <FontAwesome 
-                  name='list-ul'
-                  size={size}
-                  color={color}
-                />
-              )
-            } 
-            if (route.name === 'setting') {
-              return (
-                <FontAwesome 
-                  name="cogs"
-                  size={size}
-                  color={color}
-                />
-              )
-            }
-          },
-        })}
-        tabBarOptions={{
-          activeTintColor: 'white',
-          inactiveTintColor: '#819ca9',
-          style: {
-            backgroundColor: '#29434e'
-          }
-        }}
-        >
-          <Tab.Screen 
-            name="committees"
-            component={CommitteesTab}
-            options={{
-              title: 'Committees'
+        <SafeAreaView style={{ flex: 1, backgroundColor: "#29434e" }}>
+          <Tab.Navigator
+            screenOptions={({ route }) => ({
+              tabBarIcon: ({ color, size }) => {
+                if (route.name === "committees") {
+                  return (
+                    <FontAwesome name="list-ul" size={size} color={color} />
+                  );
+                }
+                if (route.name === "setting") {
+                  return <FontAwesome name="cogs" size={size} color={color} />;
+                }
+              },
+            })}
+            tabBarOptions={{
+              activeTintColor: "blue",
+              inactiveTintColor: "white",
+              style: {
+                backgroundColor: "tomato",
+              },
             }}
-          />
-          <Tab.Screen 
-            name="logout"
-            component={LogOutTab}
-            options={{
-              title: 'logout'
-            }}
-           />
-         </Tab.Navigator>
-      </SafeAreaView>
+          >
+            <Tab.Screen
+              name="committees"
+              component={CommitteesTab}
+              options={{
+                title: "Committees",
+              }}
+            />
+            <Tab.Screen
+              name="logout"
+              component={LogOutTab}
+              options={{
+                title: "logout",
+              }}
+            />
+          </Tab.Navigator>
+        </SafeAreaView>
       ) : (
         <>
           <StatusBar style="light" />
@@ -109,7 +116,7 @@ export default function App() {
               component={LoginScreen}
               options={{
                 title: "Sign In",
-                // header:'Sign In',
+
                 headerStyle: {
                   backgroundColor: "#29434e",
                   borderBottomColor: "#29434e",
@@ -137,7 +144,7 @@ export default function App() {
 }
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flex: 0.15,
     backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "center",

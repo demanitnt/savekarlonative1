@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Text, View } from "react-native";
+import { Text, View, ActivityIndicator } from "react-native";
 import { db, auth } from "../firebase";
 const optionsPerPage = [2, 3, 4];
 import { DataTable, FAB, List } from "react-native-paper";
@@ -12,6 +12,11 @@ const ViewAllCommittees = ({ navigation }) => {
   const [itemsPerPage, setItemsPerPage] = React.useState(optionsPerPage[0]);
   const [committees, setCommittees] = useState([]);
   const [allCommittees, setAllCommittees] = useState([]);
+
+  const Loader = (props) => {
+    const { loading, ...attributes } = props;
+    return <Modal visible={loading}></Modal>;
+  };
 
   useEffect(() => {
     var ref = db.collection("committees");
@@ -30,35 +35,29 @@ const ViewAllCommittees = ({ navigation }) => {
         });
       });
       setCommittees(objs);
-    });
-
-    console.log("All committees", committees);
-    var objComm = [];
-    Promise.all(
-      committees.map((comittee) => {
-        var ref1 = db.collection("committees").doc(comittee["com_id"]);
-        return ref1.get().then((doc) => {
-          if (doc.exists) {
-            return {
-              id: doc.id,
-              ...doc.data(),
-            };
-          } else {
-            console.log("No such document!");
-          }
+      Promise.all(
+        objs.map((comittee) => {
+          var ref1 = db.collection("committees").doc(comittee["com_id"]);
+          return ref1.get().then((doc) => {
+            if (doc.exists) {
+              return {
+                id: doc.id,
+                ...doc.data(),
+              };
+            } else {
+              console.log("No such document!");
+            }
+          });
+        })
+      )
+        .then((committeesAll) => {
+          setAllCommittees(committeesAll);
+        })
+        .catch((e) => {
+          console.log("Error in promise for", e);
         });
-      })
-    ).then((committeesAll) => {
-        setAllCommittees(committeesAll);
-      })
-      .catch((e) => {
-        console.log("Error in promise for", e);
-      });
+    });
   }, []);
-
-  const handleSubmit = (x) => {
-    console.log("The clicked", x);
-  };
 
   return (
     <>

@@ -29,7 +29,8 @@
     "react-native-screens": "~3.4.0",
     "react-native-vector-icons": "^8.1.0",
     "react-native-web": "~0.13.12",
-    "react-navigation-stack": "react-navigation/stack"
+    "react-navigation-stack": "react-navigation/stack",
+    "use-state-if-mounted": "^1.0.4"
   },
   "devDependencies": {
     "@babel/core": "~7.9.0"

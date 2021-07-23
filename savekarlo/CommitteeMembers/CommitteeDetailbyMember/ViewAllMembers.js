@@ -23,7 +23,7 @@ const ViewAllMembers = ({ route, navigation }) => {
     handleSubmit,
     formState: { errors },
   } = useForm();
-  const { comName, comShare, comId } = route.params;
+  const { comName, comShare, comId , belongsTo} = route.params;
   const [page, setPage] = useState(0);
   const [AllMembers, setAllMembers] = React.useState([]);
   const [itemsPerPage, setItemsPerPage] = React.useState(optionsPerPage[0]);
@@ -199,17 +199,18 @@ const ViewAllMembers = ({ route, navigation }) => {
             <DataTable.Row>
               <DataTable.Cell>{getMemberName(x["member_id"])}</DataTable.Cell>
               <DataTable.Cell boolean>
-                <CheckBox
+                <CheckBox 
+                  disabled = {belongsTo==user.uid}
                   style={styles.checkbox}
                   value={x["Jan"]}
                   id="1"
                   onValueChange={(e) => updateCheckboxValue(e, 1, x.id)}
                 />
               </DataTable.Cell>
-              <DataTable.Cell>
+              <DataTable.Cell>    
                 <CheckBox
-                  style={styles.checkbox}
-                  value={x["Feb"]}
+                  style={styles.checkbox} 
+                  value={x["Feb "]}
                   id="2"
                   onValueChange={(e) => updateCheckboxValue(e, 2, x.id)}
                 />
