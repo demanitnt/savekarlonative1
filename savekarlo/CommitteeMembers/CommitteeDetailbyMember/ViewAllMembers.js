@@ -23,7 +23,7 @@ const ViewAllMembers = ({ route, navigation }) => {
     handleSubmit,
     formState: { errors },
   } = useForm();
-  const { comName, comShare, comId , belongsTo} = route.params;
+  const { comName, comShare, comId, belongsTo } = route.params;
   const [page, setPage] = useState(0);
   const [AllMembers, setAllMembers] = React.useState([]);
   const [itemsPerPage, setItemsPerPage] = React.useState(optionsPerPage[0]);
@@ -45,7 +45,6 @@ const ViewAllMembers = ({ route, navigation }) => {
       query.forEach((doc) => {
         objs.push({
           id: doc.id,
-
           ...doc.data(),
         });
       });
@@ -53,14 +52,14 @@ const ViewAllMembers = ({ route, navigation }) => {
     });
 
     refPicker.onSnapshot((query) => {
-      const objs = [];
+      const objss = [];
       query.forEach((doc) => {
-        objs.push({
+        objss.push({
           id: doc.id,
           ...doc.data(),
         });
       });
-      setAllMembers(objs);
+      setAllMembers(objss);
     });
   }, []);
 
@@ -153,30 +152,23 @@ const ViewAllMembers = ({ route, navigation }) => {
     }
   };
 
-// getMemberName 
+  // getMemberName
 
-  const getMemberName =   (memberid) => {
+  const getMemberName = (memberid) => {
+    let memberNameReturned = "";
 
-  let memberNameReturned='';
+    AllMembers.map((x) => {
+      if (x["uid"] === memberid) memberNameReturned = x["memberName"];
+    });
 
-  AllMembers.map((x)=>
-  {
-  if(x['uid']===memberid)
-  memberNameReturned=x['memberName']
-   
-  }) 
-   
-     return memberNameReturned;
+    return memberNameReturned;
   };
 
   //  return
 
   return (
     <>
-      
       <View>
-      
-
         {/* table */}
 
         <DataTable.Header>
@@ -199,17 +191,17 @@ const ViewAllMembers = ({ route, navigation }) => {
             <DataTable.Row>
               <DataTable.Cell>{getMemberName(x["member_id"])}</DataTable.Cell>
               <DataTable.Cell boolean>
-                <CheckBox 
-                  disabled = {belongsTo==user.uid}
+                <CheckBox
+                  disabled={belongsTo == user.uid}
                   style={styles.checkbox}
                   value={x["Jan"]}
                   id="1"
                   onValueChange={(e) => updateCheckboxValue(e, 1, x.id)}
                 />
               </DataTable.Cell>
-              <DataTable.Cell>    
+              <DataTable.Cell>
                 <CheckBox
-                  style={styles.checkbox} 
+                  style={styles.checkbox}
                   value={x["Feb "]}
                   id="2"
                   onValueChange={(e) => updateCheckboxValue(e, 2, x.id)}

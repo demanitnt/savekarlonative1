@@ -34,7 +34,6 @@ const ViewAllCommittees = ({ navigation }) => {
           ...doc.data(),
         });
       });
-      setCommittees(objs);
       Promise.all(
         objs.map((comittee) => {
           var ref1 = db.collection("committees").doc(comittee["com_id"]);
@@ -70,8 +69,6 @@ const ViewAllCommittees = ({ navigation }) => {
           allCommittees.map((x) => (
             <View key={x.id}>
               <DataTable>
-                {/* <List.Items onPress={()=> handleSubmit(x)}> */}
-
                 <DataTable.Row
                   onPress={() =>
                     navigation.navigate("membermain", {
